@@ -1,0 +1,47 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pkl
+*.egg-info/
+*.log
+
+# 仮想環境
+venv/
+env/
+ENV/
+
+# 環境変数（DB接続情報・シークレットなど）
+.env
+
+# SQLiteなど（使わないとしても保険）
+*.db
+*.sqlite3
+
+# VSCodeやIDEの設定
+.vscode/
+.idea/
+*.swp
+*.bak
+
+# テストキャッシュやレポート
+htmlcov/
+.coverage
+.tox/
+.pytest_cache/
+.cache/
+
+# Jupyterや一時ファイル
+.ipynb_checkpoints/
+.DS_Store
+*.~ 
+
+# 本番用・機密系ファイル（将来的なセキュリティ対策）
+/secrets/
+credentials.json
+config/*.secret.json
+config/*.prod.*
+
+# GitHub Actionsが生成する一時ログなど（念のため）
+.github/workflows/*.log
