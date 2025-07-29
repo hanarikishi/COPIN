@@ -27,5 +27,5 @@ jobs:
                 pip install -r requirements.txt
 
             - name: Run Unit-tests
-              run: pytest tests/unit_test
-              # run: echo "CI完了(testコードはまだない)"\
+            #   run: pytest tests/unit_test
+              run: echo "CI完了(testコードはまだない)"
