@@ -25,8 +25,11 @@ def create_app():
 
     from app.models import User # Userモデルのimport (循環インポート防止のため、ここに記載)
     from app.routes.auth import auth_bp # authルートのインポート
+    from app.routes.article import article_bp # articleルートのインポート
 
+    # ルートの登録
     app.register_blueprint(auth_bp)
+    app.register_blueprint(article_bp)
 
     @login_manager.user_loader
     def load_user(user_id):
