@@ -3,7 +3,7 @@ from flask import Blueprint, request, jsonify
 from flask_login import login_required, current_user
 from app import db
 from app.models import Article, Tag
-from datetime import datetime
+from datetime import datetime, timezone
 
 # articleルートのBlueprintを作成
 article_bp = Blueprint('article', __name__)
@@ -53,7 +53,7 @@ def get_articles():
 # 記事の詳細取得
 @article_bp.route('/articles/<int:article_id>', methods=['GET'])
 def get_article(article_id):
-    article = Article.query.get_or_404(article_id)
+    article = Article.query.get_or_404(article_id)# レコードを取得、存在しない場合HTTP404エラー
     return jsonify({
             "id": article.id,
             "title": article.title,
@@ -62,3 +62,42 @@ def get_article(article_id):
             "tags": [t.name for t in article.tags],
             "created_at": article.created_at.strftime('%Y-%m-%d')
     })
+
+# 記事の更新
+@article_bp.route('/articles/<int:article_id>', methods=['PATCH'])
+@login_required
+def update_article(article_id):
+    article = Article.query.get_or_404(article_id)
+    if article.author_id != current_user.id:
+        return jsonify({'error': 'You are not authorized to update this article.'}), 403
+    data    = request.get_json()
+    title   = data.get('title')
+    content = data.get('content')
+    tags    = data.get('tags', [])
+
+    if title:
+        article.title = title
+    if content:
+        article.content = content
+    if tags:
+        article.tags.clear()
+        for name in tags:
+            tag = Tag.query.filter_by(name=name).first()
+            if not tag:
+                tag = Tag(name=name)
+            article.tags.append(tag)
+    article.updated_at = datetime.now(timezone.utc)
+
+    db.session.commit()
+    return jsonify({'message': 'Article updated successfully.'}), 200
+
+# 記事の削除
+@article_bp.route('/articles/<int:article_id>', methods=['DELETE'])
+@login_required
+def delete_article(article_id):
+    article = Article.query.get_or_404(article_id)
+    if article.author_id != current_user.id:
+        return jsonify({'error': 'You are not authorized to delete this article.'}), 403
+    db.session.delete(article)
+    db.session.commit()
+    return jsonify({'message': 'Article deleted successfully.'}), 200
