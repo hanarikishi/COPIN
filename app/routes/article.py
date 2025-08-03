@@ -6,10 +6,10 @@ from app.models import Article, Tag
 from datetime import datetime, timezone
 
 # articleルートのBlueprintを作成
-article_bp = Blueprint('article', __name__)
+article_bp = Blueprint('article', __name__, url_prefix='/api/articles')
 
 # 記事の作成
-@article_bp.route('/articles', methods=['POST'])
+@article_bp.route('', methods=['POST'])
 @login_required
 def create_article():
     data    = request.get_json()
@@ -36,7 +36,7 @@ def create_article():
     return jsonify({'message': 'Article created successfully.', 'article_id': article.id}), 201
 
 # 記事の一覧取得
-@article_bp.route('/articles', methods=['GET'])
+@article_bp.route('', methods=['GET'])
 def get_articles():
     articles = Article.query.order_by(Article.created_at.desc()).all()
     return jsonify([
@@ -51,7 +51,7 @@ def get_articles():
     ])
 
 # 記事の詳細取得
-@article_bp.route('/articles/<int:article_id>', methods=['GET'])
+@article_bp.route('/<int:article_id>', methods=['GET'])
 def get_article(article_id):
     article = Article.query.get_or_404(article_id)# レコードを取得、存在しない場合HTTP404エラー
     return jsonify({
@@ -64,7 +64,7 @@ def get_article(article_id):
     })
 
 # 記事の更新
-@article_bp.route('/articles/<int:article_id>', methods=['PATCH'])
+@article_bp.route('/<int:article_id>', methods=['PATCH'])
 @login_required
 def update_article(article_id):
     article = Article.query.get_or_404(article_id)
@@ -92,7 +92,7 @@ def update_article(article_id):
     return jsonify({'message': 'Article updated successfully.'}), 200
 
 # 記事の削除
-@article_bp.route('/articles/<int:article_id>', methods=['DELETE'])
+@article_bp.route('/<int:article_id>', methods=['DELETE'])
 @login_required
 def delete_article(article_id):
     article = Article.query.get_or_404(article_id)
