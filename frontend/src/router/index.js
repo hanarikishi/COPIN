@@ -6,6 +6,7 @@ import Articles from '@/views/Articles.vue'
 const routes = [
     { path: '/', name: 'Home', component: Home}, //Homeコンポーネントを表示するためのルート
     { path: '/articles', name: 'Articles', component: Articles}, //Articlesコンポーネントを表示するためのルート
+    { path: '/article/new', name: 'NewArticle', component: () => import('../views/NewArticle.vue')}
 ]
 
 // ルーターのインスタンスを作成
