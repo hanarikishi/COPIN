@@ -28,7 +28,7 @@
                 tags: tags.value.split(',').map(tag => tag.trim())
             }
             const res = await axios.post('/api/articles', payload)
-            router.push({ name: 'Articles' }) // 記事一覧ページにリダイレクト
+            router.push({ name: 'Articles' },{withCredentials: true}) // 記事一覧ページにリダイレクト,セッション Cookie を維持
             console.log('記事が登録されました:', res.data)
         } catch (error) {
             console.error('記事の登録に失敗しました:', error)

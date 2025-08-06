@@ -2,6 +2,7 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
+from flask_cors import CORS
 from dotenv import load_dotenv
 from datetime import timedelta
 import os
@@ -22,6 +23,7 @@ def create_app():
 
     db.init_app(app) #DBをFlaskアプリに接続
     login_manager.init_app(app) #Flask-Loginの初期化
+    CORS(app, supports_credentials=True, origins=["http://localhost:5173"])
 
     from app.models import User # Userモデルのimport (循環インポート防止のため、ここに記載)
     from app.routes.auth import auth_bp # authルートのインポート
